@@ -26,7 +26,7 @@ describe('test endpoints', () => {
 
   it('returns all musicians', async() => {
 
-    const musicians = await Promise.all([
+    const musiciansArray = await Promise.all([
       {
         name: 'Saba',
         country: 'United States',
@@ -54,8 +54,8 @@ describe('test endpoints', () => {
       .expect('Content-Type', /json/)
       .expect(200);
 
-    expect(response.body).toEqual(expect.arrayContaining(musicians));
-    expect(response.body).toHaveLength(musicians.length + 1);
+    expect(response.body).toEqual(expect.arrayContaining(musiciansArray));
+    expect(response.body).toHaveLength(musiciansArray.length + 1);
   });
 
 
@@ -80,11 +80,7 @@ describe('test endpoints', () => {
 
     const response = await request(app)
       .post('/musicians')
-      .send({
-        name: 'Mahalia',
-        country: 'England',
-        age: '22'
-      })
+      .send(newMusician)
       .expect('Content-Type', /json/)
       .expect(200);
 
@@ -102,11 +98,7 @@ describe('test endpoints', () => {
 
   //   const response = await request(app)
   //     .put(`/musicians/${musician.id}`)
-  //     .send({
-  //       name: 'Mereba',
-  //       country: 'United States',
-  //       age: '30'
-  //     })
+  //     .send(updatedMusician)
   //     .expect('Content-Type', /json/)
   //     .expect(200);
 
