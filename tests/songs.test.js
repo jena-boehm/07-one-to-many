@@ -3,6 +3,7 @@ const app = require('../lib/app');
 const pool = require('../lib/utils/pool');
 const fs = require('fs');
 const Song = require('../lib/models/Song.js');
+const Musician = require('../lib/models/musician');
 
 describe('song endpoints', () => {
 
@@ -60,9 +61,16 @@ describe('song endpoints', () => {
   });
 
   it('creates a new song', async() => {
+    const musician = await Musician.insert({
+      name: 'Mahalia',
+      country: 'England',
+      age: '22'
+    });
+
     const newSong = {
       title: 'Sober',
-      genre: 'Neo Soul / R&B'
+      genre: 'Neo Soul / R&B',
+      musicianId: musician.id
     };
 
     const response = await request(app)
@@ -75,15 +83,22 @@ describe('song endpoints', () => {
   });
 
   it('updates a song by id', async() => {
+    const musician = await Musician.insert({
+      name: 'Mahalia',
+      country: 'England',
+      age: '22'
+    });
     
     const song = await Song.insert({
       title: 'Sober',
-      genre: 'Neo Soul / R&B'
+      genre: 'Neo Soul / R&B',
+      musicianId: musician.id
     });
 
     const updatedSong = {
       title: 'No Reply',
-      genre: 'Neo Soul / R&B'
+      genre: 'Neo Soul / R&B',
+      musicianId: musician.id
     };
 
     const response = await request(app)
