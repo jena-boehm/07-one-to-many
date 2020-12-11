@@ -6,17 +6,17 @@ const Musician = require('../lib/models/musician');
 
 
 describe('test endpoints', () => {
-  let musician;
+  // let musician;
 
   beforeEach(async() => {
     await pool.query(fs.readFileSync('./sql/setup.sql', 'utf-8'));
 
-    musician = await Musician
-      .insert({
-        name: 'Billie Eilish',
-        country: 'United States',
-        age: '18'
-      });
+    // musician = await Musician
+    //   .insert({
+    //     name: 'Billie Eilish',
+    //     country: 'United States',
+    //     age: '18'
+    //   });
   });
 
   afterAll(() => {
@@ -55,11 +55,17 @@ describe('test endpoints', () => {
       .expect(200);
 
     expect(response.body).toEqual(expect.arrayContaining(musiciansArray));
-    expect(response.body).toHaveLength(musiciansArray.length + 1);
+    expect(response.body).toHaveLength(musiciansArray.length);
   });
 
 
   it('returns a single musician by id', async() => {
+
+    const musician = await Musician.insert({ 
+      name: 'Billie Eilish',
+      country: 'United States',
+      age: '18'
+    });
     
     const response = await request(app)
       .get(`/musicians/${musician.id}`)
@@ -72,7 +78,6 @@ describe('test endpoints', () => {
 
   it('creates a new musician', async() => {
     const newMusician = {
-      id: '2',
       name: 'Mahalia',
       country: 'England',
       age: '22'
@@ -84,24 +89,30 @@ describe('test endpoints', () => {
       .expect('Content-Type', /json/)
       .expect(200);
 
-    expect(response.body).toEqual(newMusician);
+    expect(response.body).toEqual({...newMusician, id: '1' });
   });
 
 
-  // it('updates a musician by id', async() => {
-  //   const updatedMusician = {
-  //     id: '2',
-  //     name: 'Mereba',
-  //     country: 'United States',
-  //     age: '30'
-  //   };
+  it('updates a musician by id', async() => {
+    
+    const musician = await Musician.insert({ 
+      name: 'Billie Eilish',
+      country: 'United States',
+      age: '18'
+    });
 
-  //   const response = await request(app)
-  //     .put(`/musicians/${musician.id}`)
-  //     .send(updatedMusician)
-  //     .expect('Content-Type', /json/)
-  //     .expect(200);
+    const updatedMusician = {
+      name: 'Mereba',
+      country: 'United States',
+      age: '30'
+    };
 
-  //   expect(response.body).toEqual(updatedMusician);
-  // });
+    const response = await request(app)
+      .put(`/musicians/${musician.id}`)
+      .send(updatedMusician)
+      .expect('Content-Type', /json/)
+      .expect(200);
+
+    expect(response.body).toEqual({ ...updatedMusician, id: '1' });
+  });
 });
