@@ -32,7 +32,7 @@ describe('song endpoints', () => {
       {
         title: 'Sober',
         genre: 'Neo Soul / R&B'
-      },
+      }
     ].map(song => Song.insert(song)));
 
     const response = await request(app)
@@ -42,5 +42,71 @@ describe('song endpoints', () => {
 
     expect(response.body).toEqual(expect.arrayContaining(songsArray));
     expect(response.body).toHaveLength(songsArray.length);
+  });
+
+  it('returns a single song by id', async() => {
+
+    const song = await Song.insert({
+      title: 'Lost in Paris',
+      genre: 'Neo Soul / Jazz'
+    });
+    
+    const response = await request(app)
+      .get(`/songs/${song.id}`)
+      .expect('Content-Type', /json/)
+      .expect(200);
+
+    expect(response.body).toEqual(song);
+  });
+
+  it('creates a new song', async() => {
+    const newSong = {
+      title: 'Sober',
+      genre: 'Neo Soul / R&B'
+    };
+
+    const response = await request(app)
+      .post('/songs')
+      .send(newSong)
+      .expect('Content-Type', /json/)
+      .expect(200);
+
+    expect(response.body).toEqual({ ...newSong, id: '1' });
+  });
+
+  it('updates a song by id', async() => {
+    
+    const song = await Song.insert({
+      title: 'Sober',
+      genre: 'Neo Soul / R&B'
+    });
+
+    const updatedSong = {
+      title: 'No Reply',
+      genre: 'Neo Soul / R&B'
+    };
+
+    const response = await request(app)
+      .put(`/songs/${song.id}`)
+      .send(updatedSong)
+      .expect('Content-Type', /json/)
+      .expect(200);
+
+    expect(response.body).toEqual({ ...updatedSong, id: '1' });
+  });
+
+  it('deletes a song by id', async() => {
+
+    const song = await Song.insert({
+      title: 'Nightrider',
+      genre: 'Neo Soul / Jazz'
+    });
+    
+    const response = await request(app)
+      .delete(`/songs/${song.id}`)
+      .expect('Content-Type', /json/)
+      .expect(200);
+
+    expect(response.body).toEqual(song);
   });
 });
