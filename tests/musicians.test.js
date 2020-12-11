@@ -5,8 +5,7 @@ const fs = require('fs');
 const Musician = require('../lib/models/musician');
 
 
-describe('test endpoints', () => {
-
+describe('musician endpoints', () => {
 
   beforeEach(async() => {
     await pool.query(fs.readFileSync('./sql/setup.sql', 'utf-8'));
@@ -21,11 +20,6 @@ describe('test endpoints', () => {
 
     const musiciansArray = await Promise.all([
       {
-        name: 'Saba',
-        country: 'United States',
-        age: '26'
-      },
-      {
         name: 'Tom Misch',
         country: 'England',
         age: '25'
@@ -34,11 +28,6 @@ describe('test endpoints', () => {
         name: 'Mahalia',
         country: 'England',
         age: '22'
-      },
-      {
-        name: 'Little Simz',
-        country: 'England',
-        age: '26'
       }
     ].map(musician => Musician.insert(musician)));
 
