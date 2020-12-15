@@ -42,7 +42,7 @@ describe('musician endpoints', () => {
   });
 
 
-  test.skip('returns a single musician and associated songs by id', async() => {
+  it('returns a single musician and associated songs by id', async() => {
 
     const musician = await Musician.insert({
       name: 'Tom Misch',
@@ -71,7 +71,20 @@ describe('musician endpoints', () => {
 
     expect(response.body).toEqual({
       ...musician,
-      songs: expect.arrayContaining(songs)
+      songs: [
+        {
+          id: '1',
+          title: 'Lost in Paris',
+          genre: 'Neo Soul / Jazz',
+          musicianId: musician.id
+        },
+        {
+          id: '2',
+          title: 'Nightrider',
+          genre: 'Neo Soul / Jazz',
+          musicianId: musician.id
+        }
+      ]
     });
   });
 
