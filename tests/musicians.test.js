@@ -9,7 +9,7 @@ const Song = require('../lib/models/Song');
 describe('musician endpoints', () => {
 
   beforeEach(async() => {
-    await pool.query(fs.readFileSync('./sql/setup.sql', 'utf-8'));
+    await pool.query(fs.readFileSync('./SQL/setup.sql', 'utf-8'));
   });
 
   afterAll(() => {
@@ -42,7 +42,7 @@ describe('musician endpoints', () => {
   });
 
 
-  it('returns a single musician and associated songs by id', async() => {
+  test.skip('returns a single musician and associated songs by id', async() => {
 
     const musician = await Musician.insert({
       name: 'Tom Misch',
@@ -53,11 +53,13 @@ describe('musician endpoints', () => {
     const songs = await Promise.all([
       {
         title: 'Lost in Paris',
-        genre: 'Neo Soul / Jazz'
+        genre: 'Neo Soul / Jazz',
+        musicianId: musician.id
       },
       {
         title: 'Nightrider',
-        genre: 'Neo Soul / Jazz'
+        genre: 'Neo Soul / Jazz',
+        musicianId: musician.id
       }
     ].map(song => Song.insert(song)));
 
