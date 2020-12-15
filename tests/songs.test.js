@@ -82,7 +82,7 @@ describe('song endpoints', () => {
     expect(response.body).toEqual({ ...newSong, id: '1' });
   });
 
-  test.skip('updates a song by id', async() => {
+  it('updates a song by id', async() => {
     const musician = await Musician.insert({
       name: 'Mahalia',
       country: 'England',
@@ -107,7 +107,12 @@ describe('song endpoints', () => {
       .expect('Content-Type', /json/)
       .expect(200);
 
-    expect(response.body).toEqual({ ...updatedSong, id: '1' });
+    expect(response.body).toEqual({
+      title: 'No Reply',
+      genre: 'Neo Soul / R&B',
+      musicianId: musician.id,
+      id: '1'
+    });
   });
 
   it('deletes a song by id', async() => {
